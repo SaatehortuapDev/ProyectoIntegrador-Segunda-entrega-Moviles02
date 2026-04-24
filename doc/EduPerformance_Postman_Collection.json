@@ -1,0 +1,443 @@
+{
+  "info": {
+    "name": "EduPerformance - Master Integration Cycle",
+    "description": "Colección Avanzada End-to-End. \nEsta colección simula un ciclo universitario completo (Múltiples alumnos, Múltiples cursos, Perfiles anidados, Reportes complejos y Teardown), validando tanto el Happy Path como Casos Especiales de Seguridad.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    { "key": "usrEst1Id", "value": "" },
+    { "key": "usrEst2Id", "value": "" },
+    { "key": "usrProfId", "value": "" },
+    { "key": "est1Id", "value": "" },
+    { "key": "est2Id", "value": "" },
+    { "key": "profId", "value": "" },
+    { "key": "cursoMatId", "value": "" },
+    { "key": "cursoFisId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "🚀 1. Alta de Comunidad (Usuarios y Perfiles)",
+      "description": "Creación de Usuarios inyectando también la entidad Perfil en la misma petición (Cascade).",
+      "item": [
+        {
+          "name": "1.1 Crear Usuario 1 (Con Perfil)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code es 200 o 201\", function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"usrEst1Id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Laura\",\n    \"apellido\": \"Martinez\",\n    \"edad\": 20,\n    \"email\": \"laura.{{$timestamp}}@univ.edu\",\n    \"perfil\": {\n        \"direccion\": \"Calle Falsa 123\",\n        \"telefono\": \"555-1020\"\n    }\n}"
+            },
+            "url": { "raw": "{{base_url}}/usuarios", "host": ["{{base_url}}"], "path": ["usuarios"] }
+          }
+        },
+        {
+          "name": "1.2 Crear Usuario 2 (Sin Perfil)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"usrEst2Id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Pedro\",\n    \"apellido\": \"Sosa\",\n    \"edad\": 24,\n    \"email\": \"pedro.{{$timestamp}}@univ.edu\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/usuarios", "host": ["{{base_url}}"], "path": ["usuarios"] }
+          }
+        },
+        {
+          "name": "1.3 Crear Usuario 3 (Profesor)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"usrProfId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Dr. Alan\",\n    \"apellido\": \"Turing\",\n    \"edad\": 55,\n    \"email\": \"alan.{{$timestamp}}@univ.edu\",\n    \"perfil\": {\n        \"direccion\": \"Laboratorio 4\",\n        \"telefono\": \"555-9090\"\n    }\n}"
+            },
+            "url": { "raw": "{{base_url}}/usuarios", "host": ["{{base_url}}"], "path": ["usuarios"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏫 2. Roles y Cursos (Datos Académicos)",
+      "item": [
+        {
+          "name": "2.1 Registrar Estudiante 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"est1Id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usrEst1Id}}\n    }\n}"
+            },
+            "url": { "raw": "{{base_url}}/estudiantes", "host": ["{{base_url}}"], "path": ["estudiantes"] }
+          }
+        },
+        {
+          "name": "2.2 Registrar Estudiante 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"est2Id\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usrEst2Id}}\n    }\n}"
+            },
+            "url": { "raw": "{{base_url}}/estudiantes", "host": ["{{base_url}}"], "path": ["estudiantes"] }
+          }
+        },
+        {
+          "name": "2.3 Registrar Profesor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"profId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usrProfId}}\n    }\n}"
+            },
+            "url": { "raw": "{{base_url}}/profesores", "host": ["{{base_url}}"], "path": ["profesores"] }
+          }
+        },
+        {
+          "name": "2.4 Crear Curso: Matemáticas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"cursoMatId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Matemáticas Discretas\",\n    \"descripcion\": \"Lógica y algoritmos\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/cursos", "host": ["{{base_url}}"], "path": ["cursos"] }
+          }
+        },
+        {
+          "name": "2.5 Crear Curso: Física",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"cursoFisId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Física Cuántica\",\n    \"descripcion\": \"Mecánica avanzada\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/cursos", "host": ["{{base_url}}"], "path": ["cursos"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⛓️ 3. Orquestación y Matrículas",
+      "item": [
+        {
+          "name": "3.1 Asignar Profesor a Matemáticas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/profesores/{{profId}}/asignar/{{cursoMatId}}", "host": ["{{base_url}}"], "path": ["profesores", "{{profId}}", "asignar", "{{cursoMatId}}"] }
+          }
+        },
+        {
+          "name": "3.2 Matricular Est. 1 en Matemáticas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/estudiantes/{{est1Id}}/matricular/{{cursoMatId}}", "host": ["{{base_url}}"], "path": ["estudiantes", "{{est1Id}}", "matricular", "{{cursoMatId}}"] }
+          }
+        },
+        {
+          "name": "3.3 Matricular Est. 1 en Física",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/estudiantes/{{est1Id}}/matricular/{{cursoFisId}}", "host": ["{{base_url}}"], "path": ["estudiantes", "{{est1Id}}", "matricular", "{{cursoFisId}}"] }
+          }
+        },
+        {
+          "name": "3.4 Matricular Est. 2 en Matemáticas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/estudiantes/{{est2Id}}/matricular/{{cursoMatId}}", "host": ["{{base_url}}"], "path": ["estudiantes", "{{est2Id}}", "matricular", "{{cursoMatId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 4. Transacciones Operativas",
+      "item": [
+        {
+          "name": "4.1 Nota: Estudiante 1 (Matemáticas) -> 4.5",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nota\": 4.5,\n    \"estudiante\": { \"id\": {{est1Id}} },\n    \"curso\": { \"id\": {{cursoMatId}} }\n}"
+            },
+            "url": { "raw": "{{base_url}}/calificaciones", "host": ["{{base_url}}"], "path": ["calificaciones"] }
+          }
+        },
+        {
+          "name": "4.2 Nota: Estudiante 1 (Matemáticas) -> 5.0",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nota\": 5.0,\n    \"estudiante\": { \"id\": {{est1Id}} },\n    \"curso\": { \"id\": {{cursoMatId}} }\n}"
+            },
+            "url": { "raw": "{{base_url}}/calificaciones", "host": ["{{base_url}}"], "path": ["calificaciones"] }
+          }
+        },
+        {
+          "name": "4.3 Nota: Estudiante 2 (Matemáticas) -> 3.2",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nota\": 3.2,\n    \"estudiante\": { \"id\": {{est2Id}} },\n    \"curso\": { \"id\": {{cursoMatId}} }\n}"
+            },
+            "url": { "raw": "{{base_url}}/calificaciones", "host": ["{{base_url}}"], "path": ["calificaciones"] }
+          }
+        },
+        {
+          "name": "4.4 Asistencia: Estudiante 1 (Física)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fecha\": \"{{$isoTimestamp}}\",\n    \"presente\": true,\n    \"estudiante\": { \"id\": {{est1Id}} },\n    \"curso\": { \"id\": {{cursoFisId}} }\n}"
+            },
+            "url": { "raw": "{{base_url}}/asistencias", "host": ["{{base_url}}"], "path": ["asistencias"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🚫 5. Pruebas de Estrés y Excepciones",
+      "item": [
+        {
+          "name": "5.1 Validar Error por Nota Negativa",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Esperando Error 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nota\": -1.5,\n    \"estudiante\": { \"id\": {{est1Id}} },\n    \"curso\": { \"id\": {{cursoMatId}} }\n}"
+            },
+            "url": { "raw": "{{base_url}}/calificaciones", "host": ["{{base_url}}"], "path": ["calificaciones"] }
+          }
+        },
+        {
+          "name": "5.2 Validar Error por Matrícula Duplicada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Esperando Error 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/estudiantes/{{est1Id}}/matricular/{{cursoMatId}}", "host": ["{{base_url}}"], "path": ["estudiantes", "{{est1Id}}", "matricular", "{{cursoMatId}}"] }
+          }
+        },
+        {
+          "name": "5.3 Validar Actualización Inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Esperando Error 404 Not Found\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"nombre\": \"Fantasma\" }"
+            },
+            "url": { "raw": "{{base_url}}/usuarios/99999", "host": ["{{base_url}}"], "path": ["usuarios", "99999"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📈 6. Consultas y Reportes",
+      "item": [
+        {
+          "name": "6.1 Promedio Estudiante 1 (Matemáticas)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code es 200 y promedio es 4.75\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var avg = parseFloat(pm.response.text());",
+                  "    pm.expect(avg).to.eql(4.75);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/calificaciones/promedio/estudiante/{{est1Id}}/curso/{{cursoMatId}}", "host": ["{{base_url}}"], "path": ["calificaciones", "promedio", "estudiante", "{{est1Id}}", "curso", "{{cursoMatId}}"] }
+          }
+        },
+        {
+          "name": "6.2 Estudiantes en Matemáticas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/estudiantes/curso/{{cursoMatId}}", "host": ["{{base_url}}"], "path": ["estudiantes", "curso", "{{cursoMatId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🧹 7. Mantenimiento (Teardown)",
+      "item": [
+        {
+          "name": "7.1 Eliminar Curso Física",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/cursos/{{cursoFisId}}", "host": ["{{base_url}}"], "path": ["cursos", "{{cursoFisId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}

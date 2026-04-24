@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.List;
 
+// Entidad Estudiante.
 @Entity
 @Getter
 @Setter
@@ -14,14 +15,17 @@ import java.util.List;
 @Table(name = "estudiantes")
 public class Estudiante {
 
+    // Identificador único del estudiante.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Relación Uno a Uno con Usuario (datos base).
     @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
+    // Relación Muchos a Muchos con Cursos matriculados.
     @ManyToMany
     @JoinTable(
         name = "estudiante_curso",

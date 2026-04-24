@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+// Entidad Usuario base.
 @Entity
 @Getter
 @Setter
@@ -15,24 +16,31 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class Usuario {
+    // Identificador único del usuario.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Nombre del usuario.
     @Column(length = 30, nullable = false)
     private String nombre;
 
+    // Apellido del usuario.
     private String apellido;
 
-    private int edad;
+    // Edad del usuario.
+    private Integer edad;
 
+    // Correo electrónico único.
     @Column(unique = true)
     private String email;
 
+    // Relación Uno a Uno con Perfil.
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "perfil_id", referencedColumnName = "id")
     private Perfil perfil;
 
+    // Lista de cursos asociados al usuario.
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Permite serializar esta parte
     private List<Cursos> cursos = new ArrayList<>();
