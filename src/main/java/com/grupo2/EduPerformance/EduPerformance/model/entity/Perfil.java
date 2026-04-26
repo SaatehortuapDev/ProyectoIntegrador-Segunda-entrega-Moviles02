@@ -2,6 +2,7 @@ package com.grupo2.EduPerformance.EduPerformance.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Getter
@@ -26,7 +27,6 @@ public class Perfil {
 
     // Relación inversa Uno a Uno con Usuario.
     @OneToOne(mappedBy = "perfil")
+    @JsonBackReference
     private Usuario usuario;
-
-
 }

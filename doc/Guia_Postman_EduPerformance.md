@@ -12,7 +12,7 @@ Este es el instructivo detallado de cómo debes operar la aplicación **Postman*
 5. En el panel izquierdo (Collections), despliega la colección **"EduPerformance - Master Integration Cycle"**.
 
 ---
-
+ 
 ## 📝 Ejecución del Flujo
 
 *Abre cada carpeta en el panel izquierdo y haz clic en cada petición (request). Luego, haz clic en el botón azul **Send** (Enviar) arriba a la derecha.*
