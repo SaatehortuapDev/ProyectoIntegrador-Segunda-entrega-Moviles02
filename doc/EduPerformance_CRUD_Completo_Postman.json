@@ -1,0 +1,760 @@
+{
+  "info": {
+    "name": "EduPerformance - Operaciones CRUD Completas",
+    "description": "Colección Postman que contiene el ciclo CRUD completo (Create, Read, Update, Delete) para las entidades principales del aplicativo EduPerformance2.0, con cuerpos de petición preconfigurados.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "usuarioId",
+      "value": ""
+    },
+    {
+      "key": "cursoId",
+      "value": ""
+    },
+    {
+      "key": "estudianteId",
+      "value": ""
+    },
+    {
+      "key": "profesorId",
+      "value": ""
+    },
+    {
+      "key": "asistenciaId",
+      "value": ""
+    },
+    {
+      "key": "calificacionId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "CRUD Usuarios",
+      "item": [
+        {
+          "name": "1. Crear Usuario (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set(\"usuarioId\", jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Carlos\",\n    \"apellido\": \"Gomez\",\n    \"edad\": 25,\n    \"email\": \"carlos.gomez{{$timestamp}}@univ.edu\",\n    \"perfil\": {\n        \"direccion\": \"Avenida Central 456\",\n        \"telefono\": \"555-8899\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtener Todos los Usuarios (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Usuario por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/{{usuarioId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{usuarioId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Usuario (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Carlos Modificado\",\n    \"apellido\": \"Gomez\",\n    \"edad\": 26,\n    \"email\": \"carlos.modificado{{$timestamp}}@univ.edu\",\n    \"perfil\": {\n        \"direccion\": \"Avenida Central 456 (Actualizada)\",\n        \"telefono\": \"555-0000\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios/{{usuarioId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{usuarioId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Eliminar Usuario (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/usuarios/{{usuarioId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{usuarioId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD Cursos",
+      "item": [
+        {
+          "name": "1. Crear Curso (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set(\"cursoId\", jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Programación Avanzada en Java\",\n    \"descripcion\": \"Curso intensivo de Java, Spring Boot y APIs REST.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cursos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cursos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtener Todos los Cursos (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cursos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cursos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Curso por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cursos/{{cursoId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cursos",
+                "{{cursoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Curso (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nombre\": \"Programación Avanzada en Java y Spring Boot\",\n    \"descripcion\": \"Curso actualizado que incluye microservicios.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/cursos/{{cursoId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cursos",
+                "{{cursoId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Eliminar Curso (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/cursos/{{cursoId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "cursos",
+                "{{cursoId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD Estudiantes",
+      "item": [
+        {
+          "name": "1. Crear Estudiante (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set(\"estudianteId\", jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usuarioId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/estudiantes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estudiantes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtener Todos los Estudiantes (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/estudiantes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estudiantes"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Estudiante por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/estudiantes/{{estudianteId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estudiantes",
+                "{{estudianteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Estudiante (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usuarioId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/estudiantes/{{estudianteId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estudiantes",
+                "{{estudianteId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Eliminar Estudiante (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/estudiantes/{{estudianteId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "estudiantes",
+                "{{estudianteId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD Profesores",
+      "item": [
+        {
+          "name": "1. Crear Profesor (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set(\"profesorId\", jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usuarioId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profesores",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profesores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtener Todos los Profesores (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profesores",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profesores"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Profesor por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profesores/{{profesorId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profesores",
+                "{{profesorId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Profesor (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"usuario\": {\n        \"id\": {{usuarioId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profesores/{{profesorId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profesores",
+                "{{profesorId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Eliminar Profesor (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profesores/{{profesorId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "profesores",
+                "{{profesorId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD Asistencias",
+      "item": [
+        {
+          "name": "1. Crear Asistencia (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set(\"asistenciaId\", jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fecha\": \"2024-05-02\",\n    \"presente\": true,\n    \"estudiante\": {\n        \"id\": {{estudianteId}}\n    },\n    \"curso\": {\n        \"id\": {{cursoId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/asistencias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "asistencias"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtener Todas las Asistencias (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/asistencias",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "asistencias"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Asistencia por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/asistencias/{{asistenciaId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "asistencias",
+                "{{asistenciaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Asistencia (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"fecha\": \"2024-05-02\",\n    \"presente\": false,\n    \"estudiante\": {\n        \"id\": {{estudianteId}}\n    },\n    \"curso\": {\n        \"id\": {{cursoId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/asistencias/{{asistenciaId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "asistencias",
+                "{{asistenciaId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Eliminar Asistencia (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/asistencias/{{asistenciaId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "asistencias",
+                "{{asistenciaId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CRUD Calificaciones",
+      "item": [
+        {
+          "name": "1. Crear Calificacion (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.collectionVariables.set(\"calificacionId\", jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nota\": 4.5,\n    \"estudiante\": {\n        \"id\": {{estudianteId}}\n    },\n    \"curso\": {\n        \"id\": {{cursoId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/calificaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calificaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtener Todas las Calificaciones (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/calificaciones",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calificaciones"
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Obtener Calificacion por ID (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/calificaciones/{{calificacionId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calificaciones",
+                "{{calificacionId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Actualizar Calificacion (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nota\": 5.0,\n    \"estudiante\": {\n        \"id\": {{estudianteId}}\n    },\n    \"curso\": {\n        \"id\": {{cursoId}}\n    }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/calificaciones/{{calificacionId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calificaciones",
+                "{{calificacionId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. Eliminar Calificacion (DELETE)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/calificaciones/{{calificacionId}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "calificaciones",
+                "{{calificacionId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
