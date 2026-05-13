@@ -35,6 +35,9 @@ public class Usuario {
     @Column(unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     // Relación Uno a Uno con Perfil.
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "perfil_id", referencedColumnName = "id")

@@ -1,63 +1,62 @@
 package com.grupo2.EduPerformance.EduPerformance.controller;
 
-import com.grupo2.EduPerformance.EduPerformance.model.entity.Profesor;
+import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.response.ProfesorResponseDTO;
+import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.request.ProfesorRequestDTO;
 import com.grupo2.EduPerformance.EduPerformance.service.ProfesorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Controlador para manejar los Profesores.
 @RestController
 @RequestMapping("/api/profesores")
 public class ProfesorController {
 
-    // Inyección del servicio de profesores.
     @Autowired
     private ProfesorService service;
 
-    // Obtiene todos los profesores.
     @GetMapping
-    public List<Profesor> getAll() {
+    public List<ProfesorResponseDTO> getAll() {
         return service.findAll();
     }
 
-    // Obtiene un profesor por su ID.
     @GetMapping("/{id}")
-    public ResponseEntity<Profesor> getById(@PathVariable Long id) {
+    public ResponseEntity<ProfesorResponseDTO> getById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crea un nuevo profesor.
     @PostMapping
-    public Profesor create(@RequestBody Profesor entity) {
-        return service.save(entity);
+    public ProfesorResponseDTO create(@Valid @RequestBody ProfesorRequestDTO dto) {
+        return service.save(dto);
     }
 
-    // Actualiza un profesor existente.
     @PutMapping("/{id}")
-    public ResponseEntity<Profesor> update(@PathVariable Long id, @RequestBody Profesor entity) {
+    public ResponseEntity<ProfesorResponseDTO> update(
+            @PathVariable Long id,
+            @Valid @RequestBody ProfesorRequestDTO dto) {
         try {
-            Profesor updated = service.update(id, entity);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(service.update(id, dto));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Elimina un profesor por su ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Asigna un curso a un profesor.
+    // Endpoint de asignación — sin cambios en la firma,
+    // la lógica mejorada vive en el Service
     @PostMapping("/{id}/asignar/{cursoId}")
-    public ResponseEntity<Profesor> asignarCurso(@PathVariable Long id, @PathVariable Long cursoId) {
+    public ResponseEntity<ProfesorResponseDTO> asignarCurso(
+            @PathVariable Long id,
+            @PathVariable Long cursoId) {
         try {
             return ResponseEntity.ok(service.asignarCurso(id, cursoId));
         } catch (RuntimeException e) {
