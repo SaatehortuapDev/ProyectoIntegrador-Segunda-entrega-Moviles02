@@ -48,6 +48,7 @@ public class UsuarioService {
         usuario.setApellido(dto.getApellido());
         usuario.setEdad(dto.getEdad());
         usuario.setEmail(dto.getEmail());
+        usuario.setPassword(dto.getPassword()); // 🔐 En un caso real, aquí se debería hashear el password antes de guardarlo
 
 
 
