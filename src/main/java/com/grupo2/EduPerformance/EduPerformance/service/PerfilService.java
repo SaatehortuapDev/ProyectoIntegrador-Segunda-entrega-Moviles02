@@ -2,9 +2,11 @@ package com.grupo2.EduPerformance.EduPerformance.service;
 
 import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.request.PerfilRequestDTO;
 import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.response.PerfilResponseDTO;
+import com.grupo2.EduPerformance.EduPerformance.exception.ReglaNegocioException;
 import com.grupo2.EduPerformance.EduPerformance.model.entity.Perfil;
 import com.grupo2.EduPerformance.EduPerformance.model.entity.Usuario;
 import com.grupo2.EduPerformance.EduPerformance.repository.PerfilRepository;
+import com.grupo2.EduPerformance.EduPerformance.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,9 @@ public class PerfilService {
     @Autowired
     private PerfilRepository repository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     // ── Mapeo Entidad → ResponseDTO ──────────────────────────
     private PerfilResponseDTO toResponseDTO(Perfil p) {
         PerfilResponseDTO dto = new PerfilResponseDTO();
@@ -29,9 +34,8 @@ public class PerfilService {
         // Navega la relación inversa hacia Usuario de forma segura
         // Perfil tiene @OneToOne(mappedBy = "perfil") → accede al usuario dueño
         if (p.getUsuario() != null) {
-            Usuario u = p.getUsuario();
-            dto.setUsuarioId(u.getId());
-            dto.setNombreUsuario(u.getNombre() + " " + u.getApellido());
+            dto.setUsuarioId(p.getUsuario().getId());
+            dto.setNombreUsuario(p.getUsuario().getNombre() + " " + p.getUsuario().getApellido());
         }
 
         return dto;
@@ -42,12 +46,23 @@ public class PerfilService {
     // solo dirección y teléfono. La relación con Usuario se gestiona
     // desde UsuarioService al hacer cascade.
     private Perfil toEntity(PerfilRequestDTO dto) {
+        // Verifica que el Usuario exista antes de crear el perfil
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
+                .orElseThrow(() -> new RuntimeException(
+                        "Usuario no encontrado con ID: " + dto.getUsuarioId()));
+
+        // Valida que ese usuario no tenga ya un perfil
+        if (repository.existsByUsuarioId(dto.getUsuarioId())) {
+            throw new ReglaNegocioException(
+                    "El usuario con ID " + dto.getUsuarioId() + " ya tiene un perfil asignado.");
+        }
+
         Perfil perfil = new Perfil();
         perfil.setDireccion(dto.getDireccion());
         perfil.setTelefono(dto.getTelefono());
+        perfil.setUsuario(usuario);
         return perfil;
     }
-
     // ── Métodos CRUD ─────────────────────────────────────────
 
     public List<PerfilResponseDTO> findAll() {
@@ -59,6 +74,11 @@ public class PerfilService {
 
     public Optional<PerfilResponseDTO> findById(Long id) {
         return repository.findById(id).map(this::toResponseDTO);
+    }
+
+    // Busca el perfil de un usuario por su ID
+    public Optional<PerfilResponseDTO> findByUsuarioId(Long usuarioId) {
+        return repository.findByUsuarioId(usuarioId).map(this::toResponseDTO);
     }
 
     @Transactional

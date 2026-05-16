@@ -29,6 +29,16 @@ public class PerfilController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    // NUEVO: busca el perfil de un usuario por su usuarioId
+    // Útil para el frontend: "dame el perfil del usuario 5"
+    // GET /api/perfiles/usuario/5
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<PerfilResponseDTO> getByUsuarioId(@PathVariable Long usuarioId) {
+        return service.findByUsuarioId(usuarioId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public PerfilResponseDTO create(@Valid @RequestBody PerfilRequestDTO dto) {
         return service.save(dto);

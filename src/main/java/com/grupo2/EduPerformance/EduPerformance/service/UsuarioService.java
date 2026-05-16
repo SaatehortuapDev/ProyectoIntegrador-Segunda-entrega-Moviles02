@@ -20,10 +20,6 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository repository;
 
-    @Autowired
-    private PerfilRepository perfilRepository;
-
-
 
     // ── Mapeo Entidad → ResponseDTO ──────────────────────────
     private UsuarioResponseDTO toResponseDTO(Usuario u) {
@@ -50,14 +46,6 @@ public class UsuarioService {
         usuario.setEmail(dto.getEmail());
         usuario.setPassword(dto.getPassword()); // 🔐 En un caso real, aquí se debería hashear el password antes de guardarlo
 
-
-
-        if (dto.getPerfilId() != null) {
-            Perfil perfil = perfilRepository.findById(dto.getPerfilId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Perfil no encontrado con ID: " + dto.getPerfilId()));
-            usuario.setPerfil(perfil);
-        }
         return usuario;
     }
 
@@ -93,13 +81,7 @@ public class UsuarioService {
         // 🔐 Solo re-hashea si el cliente envía un password nuevo
         // Evita re-hashear un hash ya existente si el cliente lo envía igual
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-        }
-
-        if (dto.getPerfilId() != null) {
-            Perfil perfil = perfilRepository.findById(dto.getPerfilId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Perfil no encontrado con ID: " + dto.getPerfilId()));
-            existente.setPerfil(perfil);
+            existente.setPassword(dto.getPassword());
         }
 
         return toResponseDTO(repository.save(existente));
