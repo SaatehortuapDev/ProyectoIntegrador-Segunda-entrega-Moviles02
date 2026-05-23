@@ -1,5 +1,6 @@
 package com.grupo2.EduPerformance.EduPerformance.model.entity;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +36,13 @@ public class Usuario {
     @Column(unique = true)
     private String email;
 
-    // Relación Uno a Uno con Perfil.
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "perfil_id", referencedColumnName = "id")
-    private Perfil perfil;
+    @Column(nullable = false)
+    private String password;
 
+    // Relación Uno a Uno con Perfil.
+    @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Perfil perfil;
     // Lista de cursos asociados al usuario.
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Permite serializar esta parte

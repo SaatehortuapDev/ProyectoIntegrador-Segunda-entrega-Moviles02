@@ -1,54 +1,50 @@
 package com.grupo2.EduPerformance.EduPerformance.controller;
 
-import com.grupo2.EduPerformance.EduPerformance.model.entity.Cursos;
+import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.request.CursosRequestDTO;
+import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.response.CursosResponseDTO;
 import com.grupo2.EduPerformance.EduPerformance.service.CursosService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// Controlador para manejar los Cursos.
 @RestController
 @RequestMapping("/api/cursos")
 public class CursosController {
 
-    // Inyección del servicio de cursos.
     @Autowired
     private CursosService service;
 
-    // Obtiene todos los cursos.
     @GetMapping
-    public List<Cursos> getAll() {
+    public List<CursosResponseDTO> getAll() {
         return service.findAll();
     }
 
-    // Obtiene un curso por su ID.
     @GetMapping("/{id}")
-    public ResponseEntity<Cursos> getById(@PathVariable Long id) {
+    public ResponseEntity<CursosResponseDTO> getById(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crea un nuevo curso.
     @PostMapping
-    public Cursos create(@RequestBody Cursos entity) {
-        return service.save(entity);
+    public CursosResponseDTO create(@Valid @RequestBody CursosRequestDTO dto) {
+        return service.save(dto);
     }
 
-    // Actualiza un curso existente.
     @PutMapping("/{id}")
-    public ResponseEntity<Cursos> update(@PathVariable Long id, @RequestBody Cursos entity) {
+    public ResponseEntity<CursosResponseDTO> update(
+            @PathVariable Long id,
+            @Valid @RequestBody CursosRequestDTO dto) {
         try {
-            Cursos updated = service.update(id, entity);
-            return ResponseEntity.ok(updated);
+            return ResponseEntity.ok(service.update(id, dto));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Elimina un curso por su ID.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteById(id);

@@ -26,7 +26,8 @@ public class Perfil {
     private String telefono;
 
     // Relación inversa Uno a Uno con Usuario.
-    @OneToOne(mappedBy = "perfil")
+    @OneToOne
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id", nullable = false, unique = true)
     @JsonBackReference
     private Usuario usuario;
 }
