@@ -37,6 +37,7 @@ public class EstudianteService {
 
         if (e.getUsuario() != null) {
             Usuario u = e.getUsuario();
+            dto.setUsuarioId(u.getId());
             // Combina nombre y apellido en un solo campo
             dto.setNombreCompleto(u.getNombre() + " " + u.getApellido());
             dto.setEmail(u.getEmail());

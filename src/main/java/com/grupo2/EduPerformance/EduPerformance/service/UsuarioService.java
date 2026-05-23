@@ -2,11 +2,10 @@ package com.grupo2.EduPerformance.EduPerformance.service;
 
 import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.request.UsuarioRequestDTO;
 import com.grupo2.EduPerformance.EduPerformance.model.entity.dto.response.UsuarioResponseDTO;
-import com.grupo2.EduPerformance.EduPerformance.model.entity.Perfil;
 import com.grupo2.EduPerformance.EduPerformance.model.entity.Usuario;
-import com.grupo2.EduPerformance.EduPerformance.repository.PerfilRepository;
 import com.grupo2.EduPerformance.EduPerformance.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +19,12 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository repository;
 
+    // BCrypt es el estándar para hashear passwords.
+    // Genera un hash distinto cada vez (salt automático) — seguro contra rainbow
+    // tables.
+    // El "10" es el factor de costo — más alto = más seguro pero más lento.
+@Autowired
+private PasswordEncoder passwordEncoder;
 
     // ── Mapeo Entidad → ResponseDTO ──────────────────────────
     private UsuarioResponseDTO toResponseDTO(Usuario u) {
@@ -44,7 +49,8 @@ public class UsuarioService {
         usuario.setApellido(dto.getApellido());
         usuario.setEdad(dto.getEdad());
         usuario.setEmail(dto.getEmail());
-        usuario.setPassword(dto.getPassword()); // 🔐 En un caso real, aquí se debería hashear el password antes de guardarlo
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword())); // 🔐 En un caso real, aquí se debería hashear
+
 
         return usuario;
     }
@@ -61,6 +67,7 @@ public class UsuarioService {
     public Optional<UsuarioResponseDTO> findById(Long id) {
         return repository.findById(id).map(this::toResponseDTO);
     }
+
 
     @Transactional
     public UsuarioResponseDTO save(UsuarioRequestDTO dto) {
@@ -81,7 +88,9 @@ public class UsuarioService {
         // 🔐 Solo re-hashea si el cliente envía un password nuevo
         // Evita re-hashear un hash ya existente si el cliente lo envía igual
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-            existente.setPassword(dto.getPassword());
+            if (!passwordEncoder.matches(dto.getPassword(), existente.getPassword())) {
+                existente.setPassword(passwordEncoder.encode(dto.getPassword()));
+            }
         }
 
         return toResponseDTO(repository.save(existente));

@@ -13,6 +13,7 @@ import java.util.List;
 public class EstudianteResponseDTO {
 
     private Long id;
+    private Long usuarioId;
 
     // Datos del usuario aplanados — sin anidar el objeto Usuario completo
     private String nombreCompleto;   // nombre + " " + apellido
