@@ -1,83 +1,171 @@
 # EduPerformance
 
-Optimizar la gestión académica por medio de una plataforma moderna, tanto para el estudiante como para el docente.
+EduPerformance es una API REST para la gestion academica de estudiantes, profesores, cursos, calificaciones y asistencias. El proyecto centraliza informacion academica, aplica reglas de negocio en el backend y expone servicios listos para ser consumidos por aplicaciones web o moviles.
 
-## Introducción / Contexto
+## Planteamiento del problema
 
-- Los estudiantes y profesores carecen de herramientas integradas que les permitan gestionar eficazmente el tiempo, las tareas y los proyectos académicos.
-- Una plataforma académica moderna mejora la productividad, fomenta la organización y contribuye al éxito académico, con impacto positivo tanto en la comunidad estudiantil como en la gestión docente.
-- Gestión académica universitaria enfocada en la administración de cursos, tareas, proyectos y comunicación entre estudiantes y docentes.
+En muchos entornos academicos la informacion de estudiantes, docentes, cursos, notas y asistencias se administra en herramientas separadas o de forma manual. Esto dificulta el seguimiento oportuno del rendimiento, aumenta el riesgo de inconsistencias y reduce la capacidad de profesores y estudiantes para consultar informacion actualizada.
+
+EduPerformance propone una solucion backend organizada y escalable que permite administrar estos procesos desde una API unica, con validaciones de negocio, persistencia relacional, documentacion interactiva y soporte para despliegue en la nube.
 
 ## Objetivos
 
-**Objetivo General**
+**Objetivo general**
 
-- Desarrollar un proyecto fullstack (backend, frontend y bases de datos) robusto que soporte la gestión académica universitaria de manera eficiente y escalable.
+Desarrollar una API backend robusta con Spring Boot que soporte la gestion academica universitaria de manera eficiente, mantenible y preparada para integrarse con clientes web o moviles.
 
-**Objetivos Específicos**
+**Objetivos especificos**
 
-- Diseñar la arquitectura backend utilizando Spring Boot y JPA bajo un patrón Multicapa (Controller - Service - Repository).
-- Implementar servicios REST y lógica de negocio avanzada para la gestión de estudiantes, docentes, calificaciones y cursos.
-- Garantizar seguridad, escalabilidad e interoperabilidad (CORS, Swagger, Global Exceptions) para consumir los datos desde cualquier Front-End.
-- Documentar el proyecto siguiendo estrictos estándares profesionales, arquitectónicos y comerciales.
+- Implementar una arquitectura multicapa basada en Controller, Service, Repository y Entity.
+- Gestionar usuarios, perfiles, estudiantes, profesores, cursos, calificaciones y asistencias mediante endpoints REST.
+- Aplicar reglas de negocio para proteger la integridad de calificaciones, asistencias y relaciones academicas.
+- Documentar la API con Swagger/OpenAPI y una coleccion de Postman.
+- Preparar el proyecto para ejecucion local, contenedores Docker y despliegue en Render con PostgreSQL.
 
----
+## Integrantes del proyecto
 
-## 🚀 Actualizaciones y Características Implementadas (v1.0 API)
+| Integrante |
+|------------|
+| Sergio Aterhortua |
+| David Marin |
+| Yeison Angel |
+| Alison Diaz |
+| Carolina Martinez |
 
-La arquitectura backend inicial ha sido elevada a categoría empresarial, contando ahora con las siguientes fortalezas:
+## Tecnologias principales
 
-1. **Lógica de Negocio Avanzada:**
-   - **Motor de Calificaciones:** Cálculo automático de promedios ("al vuelo") y bloqueo estricto contra notas fuera del rango permitido (0.0 - 5.0).
-   - **Control de Asistencia:** Restricciones anti-fraude que bloquean el registro de asistencias con fechas futuras.
-   - **Matrículas Protegidas:** Sistema de inyección cruzada que evita la doble matriculación de un estudiante en el mismo curso.
+- Java 21
+- Spring Boot 4.0.3
+- Spring Web MVC
+- Spring Data JPA / Hibernate
+- Spring Validation
+- Spring Security
+- PostgreSQL
+- Lombok
+- Swagger / OpenAPI con Springdoc
+- Scalar API Reference
+- Docker
+- Render
+- Maven
+- Postman
 
-2. **Preparación Arquitectónica para Frontend:**
-   - **CORS Configurado:** Las políticas de navegadores están habilitadas para aceptar peticiones de puertos estándares (ej. `:3000`, `:4200`) de React, Angular o Vue.
-   - **Manejo Global de Excepciones (@ControllerAdvice):** Si se viola una regla (ej. intentar matricularse dos veces), el back-end no explota; arroja un JSON estructurado (Code 400) que el frontend puede leer y mostrar elegantemente al usuario.
-   - **Swagger / OpenAPI 3:** Integración total. Al iniciar el servidor en `localhost:8080/swagger-ui.html` se visualiza una página gráfica interactiva donde todo el equipo puede documentarse y probar las rutas de la API en vivo.
+## Modulos implementados
 
-3. **Código y Arquitectura Profesionales:**
-   - **Documentación de Código Optimizado:** Se reemplazaron bloques de documentación extensos por comentarios concisos y declarativos (One-liners) a lo largo de todas las capas del aplicativo (Models, Repositories, Services, Controllers). Esto maximiza la mantenibilidad y facilita la lectura ágil del equipo de desarrollo.
-   - **Presentación Técnica Ejecutiva:** Hemos consolidado toda la esencia del aplicativo en un nuevo manifiesto de arquitectura.
+- **Usuarios:** datos base de acceso e identificacion.
+- **Perfiles:** informacion complementaria del usuario, como direccion y telefono.
+- **Estudiantes:** vinculacion del usuario con rol academico de estudiante.
+- **Profesores:** vinculacion del usuario con rol docente.
+- **Cursos:** creacion y administracion de cursos con profesor asignado.
+- **Calificaciones:** registro de notas, consulta por estudiante y curso, y calculo de promedio.
+- **Asistencias:** registro de asistencia por estudiante, curso y fecha.
 
-Para revisar en detalle la documentación técnica, manuales para Swagger, Casos de Uso y la [Explicación Técnica Comercial (Enterprise-Grade)](./doc/Explicacion_Tecnica_EduPerformance.md), visita la **[Carpeta `/doc` de este repositorio](./doc)**.
+## Reglas de negocio destacadas
 
----
+- Las calificaciones solo se aceptan en el rango de `0.0` a `5.0`.
+- El promedio de calificaciones se calcula desde las notas registradas para un estudiante en un curso.
+- No se permite registrar asistencias con fechas futuras.
+- Los errores de negocio se responden en formato JSON mediante un manejador global de excepciones.
+- Las respuestas usan DTOs para evitar exponer directamente relaciones internas o generar ciclos de serializacion.
 
-## Alcance del Proyecto (Scope)
+## Arquitectura
 
-**Qué se ha desarrollado (Backend):**
-- Módulos robustos de gestión académica (Estudiantes, Perfiles, Profesores, Cursos, Calificaciones y Asistencias).
-- API REST blindada con manejo de errores JSON estandarizado.
-- Arquitectura Limpia basada en Inversión de Control de Spring.
-- Documentación y Entorno visual automatizado (Swagger).
+El proyecto sigue una arquitectura por capas:
 
-**Qué NO se va a desarrollar en esta versión (fuera de alcance):**
-- Integración con sistemas externos de matrícula financiera o pagos.
-- Funcionalidades avanzadas de analítica académica profunda (ej. Machine Learning).
+- **Controller:** expone endpoints REST bajo rutas `/api/*`.
+- **Service:** concentra la logica de negocio, validaciones y conversion entre entidades y DTOs.
+- **Repository:** accede a la base de datos mediante Spring Data JPA.
+- **Entity:** define el modelo relacional con anotaciones JPA.
+- **DTO:** separa los datos de entrada y salida de las entidades persistidas.
+- **Exception:** centraliza respuestas de error con `GlobalExceptionHandler`.
+- **Config:** contiene configuraciones de CORS, seguridad y OpenAPI.
 
----
+## Diagrama de base de datos
 
-## Tecnologías y Herramientas (Tech Stack)
+El modelo relacional del proyecto se encuentra documentado en la carpeta `doc`.
 
-- **Backend**: Spring Initializr, Java 21, Spring Data JPA, Lombok, Springdoc (Swagger OpenAPI 3).
-- **Frontend**: React + Vite + Tailwind CSS.
-- **Base de datos**: PostgreSQL en producción, H2 en desarrollo inicial.
-- **Otras herramientas**: Git, GitHub, Postman, Swagger UI.
+![Diagrama relacional](./doc/diagrama-relacional.png)
 
----
+## Endpoints principales
 
-## Integrantes del Equipo
+| Recurso | Ruta base | Operaciones |
+|---------|-----------|-------------|
+| Usuarios | `/api/usuarios` | CRUD |
+| Perfiles | `/api/perfiles` | CRUD |
+| Estudiantes | `/api/estudiantes` | CRUD |
+| Profesores | `/api/profesores` | CRUD |
+| Cursos | `/api/cursos` | CRUD |
+| Calificaciones | `/api/calificaciones` | CRUD, consulta por estudiante/curso, promedio |
+| Asistencias | `/api/asistencias` | CRUD, consulta por curso/fecha |
 
-| Nombre            | Rol principal                  | Correo / Usuario GitHub           |
-|-------------------|--------------------------------|-----------------------------------|
-| Sergio Atehortua  | Líder / Backend                | salejandro.atehortua@udea.edu.co  |
-| Alison Díaz       | Frontend Lead                  | alinson_04@hotmail.com            |
-| Jeison ossa       | Backend / Base de datos        | @yeisonossa3010@gmail.com         |
+Endpoints especiales:
 
----
+- `GET /api/calificaciones/estudiante/{estudianteId}/curso/{cursoId}`
+- `GET /api/calificaciones/promedio/estudiante/{estudianteId}/curso/{cursoId}`
+- `GET /api/asistencias/curso/{cursoId}/fecha/{fecha}`
 
-## Diagrama de Clases del Dominio (v1)
+## Documentacion y pruebas de API
 
-![Diagrama de Dominion v1](/doc/diagrama-dominio-v1.png)
+Al ejecutar el proyecto localmente, la documentacion interactiva queda disponible en:
+
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON: `http://localhost:8080/api-docs`
+
+Tambien se incluye una coleccion de Postman para probar el CRUD completo:
+
+- [`doc/EduPerformance_CRUD_Completo_Postman.json`](./doc/EduPerformance_CRUD_Completo_Postman.json)
+- [`doc/Guia_Uso_CRUD_Postman.md`](./doc/Guia_Uso_CRUD_Postman.md)
+
+## Guia de ejecucion local
+
+1. Clonar el repositorio.
+
+```bash
+git clone <url-del-repositorio>
+cd ProyectoIntegrador-Segunda-entrega-Moviles02
+```
+
+2. Crear un archivo `.env` en la raiz del proyecto con las variables de PostgreSQL.
+
+```properties
+DB_URL=jdbc:postgresql://localhost:5432/eduperformance
+DB_USERNAME=postgres
+DB_PASSWORD=tu_password
+```
+
+3. Ejecutar el proyecto con Maven.
+
+```bash
+./mvnw spring-boot:run
+```
+
+En Windows tambien se puede usar:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+4. Abrir Swagger UI.
+
+```text
+http://localhost:8080/swagger-ui.html
+```
+
+## Ejecucion con Docker
+
+El proyecto incluye un `Dockerfile` con compilacion en dos etapas:
+
+```bash
+docker build -t eduperformance-api .
+docker run -p 8080:8080 --env-file .env eduperformance-api
+```
+
+## Despliegue
+
+El archivo `render.yaml` define el despliegue como servicio web Docker en Render y una base de datos PostgreSQL administrada. Las variables `DB_URL`, `DB_USERNAME` y `DB_PASSWORD` se toman desde la base de datos configurada en Render.
+
+## Documentacion tecnica
+
+La explicacion tecnica ampliada se encuentra en:
+
+- [`doc/Explicacion_Tecnica_EduPerformance.md`](./doc/Explicacion_Tecnica_EduPerformance.md)
+
